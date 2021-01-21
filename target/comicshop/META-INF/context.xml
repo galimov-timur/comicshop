@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/comicshop">
+    <Resource name="jdbc/comicshop"
+              auth="Container"
+              type="javax.sql.DataSource"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:5432/comicshop"
+              username="postgres"
+              password="postgres"
+              maxActive="100"
+              maxTotal="10000"
+              logAbandoned="true"
+              removeAbandoned="true"
+              removeAbandonedTimeout="60"
+              maxIdle="30" />
+</Context>
