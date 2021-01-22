@@ -1,6 +1,7 @@
 package kz.comicshop.service;
 
 import kz.comicshop.data.OrderDetailsDAO;
+import kz.comicshop.data.OrderItemDAO;
 import kz.comicshop.data.UserDAO;
 import kz.comicshop.entity.Cart;
 import kz.comicshop.entity.OrderDetails;
@@ -23,20 +24,20 @@ public class CheckoutService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = "/address.jsp";
-        String action = request.getParameter("action");
+        String destPage = ADDRESS_PAGE;
+        String action = request.getParameter(ACTION);
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        Cart cart = (Cart)session.getAttribute("cart");
+        User user = (User) session.getAttribute(USER);
+        Cart cart = (Cart)session.getAttribute(CART);
 
         if(cart.getSize() > 0) {
             if(user == null) {
-                String nextPage = "/address.jsp";
+                String nextPage = ADDRESS_PAGE;
                 String message = "<div class='message --warning'><p>Для продолжения требуется авторизация!</p></div>";
-                session.setAttribute("nextPage", nextPage);
-                request.setAttribute("message", message);
-                destPage = "/login.jsp";
+                session.setAttribute(NEXT_PAGE, nextPage);
+                request.setAttribute(MESSAGE, message);
+                destPage = LOGIN_PAGE;
             }
 
             if(action != null && action.equals("updateAddress")) {
@@ -51,7 +52,7 @@ public class CheckoutService implements Service {
                 user.setZip(zip);
                 user.setCountry(country);
                 UserDAO.updateAddress(user);
-                destPage = "/invoice.jsp";
+                destPage = INVOICE_PAGE;
             }
 
             if(action != null && action.equals("saveOrder")) {
@@ -72,15 +73,15 @@ public class CheckoutService implements Service {
                 long orderId = OrderDetailsDAO.insertOrder(orderDetails);
 
                 // store in database products related to this order
-                OrderDetailsDAO.insertOrderItems(orderDetails, orderId);
+                OrderItemDAO.insertOrderItems(orderDetails, orderId);
                 cart.empty();
 
-                request.setAttribute("orderId", orderId);
-                session.setAttribute("cart", cart);
-                destPage = "/thanks.jsp";
+                request.setAttribute(ORDER_ID, orderId);
+                session.setAttribute(CART, cart);
+                destPage = THANKS_PAGE;
             }
         } else {
-            destPage = "/cart.jsp";
+            destPage = CART_PAGE;
         }
 
 

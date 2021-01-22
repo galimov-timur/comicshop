@@ -12,9 +12,11 @@ kz/comicshop/service/factory/ServiceFactory.class
 kz/comicshop/entity/User.class
 kz/comicshop/entity/Product.class
 kz/comicshop/data/ConnectionPool.class
+kz/comicshop/service/ShowOrderService.class
 kz/comicshop/service/CheckoutService.class
 kz/comicshop/service/AdminService.class
 kz/comicshop/service/RegistrationService.class
+kz/comicshop/data/OrderItemDAO.class
 kz/comicshop/data/DbUtility.class
 kz/comicshop/entity/Category.class
 kz/comicshop/service/Service.class
@@ -23,7 +25,7 @@ kz/comicshop/service/CartService.class
 kz/comicshop/entity/OrderItem.class
 kz/comicshop/service/UploadProductService.class
 kz/comicshop/entity/OrderDetails.class
-kz/comicshop/service/CategoryService.class
+kz/comicshop/service/AdminOrderService.class
 kz/comicshop/data/OrderDetailsDAO.class
 kz/comicshop/service/LoginService.class
 kz/comicshop/service/ShowProductService.class

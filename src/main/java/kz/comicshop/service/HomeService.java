@@ -18,15 +18,15 @@ public class HomeService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String url = "/index.jsp";
+        String url = INDEX_PAGE;
         long defaultCategoryId = 1;
 
         Category category = CategoryDAO.getCategoryById(defaultCategoryId);
         ArrayList<Product> products = ProductDAO.getProductsByCategory(defaultCategoryId);
 
         if(category != null && products != null) {
-            request.setAttribute("products", products);
-            request.setAttribute("categoryName", category.getName());
+            request.setAttribute(PRODUCTS, products);
+            request.setAttribute(NAME, category.getName());
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(url);

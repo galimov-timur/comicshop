@@ -11,9 +11,9 @@ public class AddProductService implements Service {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        String url = "/add_product.jsp";
+        String destPage = ADD_PRODUCT_PAGE;
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
     }
 }

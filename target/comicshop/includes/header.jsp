@@ -27,7 +27,7 @@
                                     <div class="dropdown">
                                         <a class="dropbtn">Мой кабинет</a>
                                         <div class="dropdown-content">
-                                            <a href="#">Мои заказы</a>
+                                            <a href="<c:url value='/order/show'/>">Мои заказы</a>
                                             <a href="<c:url value='/logout'/>">Выйти</a>
                                         </div>
                                     </div>

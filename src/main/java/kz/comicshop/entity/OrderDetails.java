@@ -1,15 +1,14 @@
 package kz.comicshop.entity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-/**
- * OrderDetails
- * orderStatus values: 0 - new, 1 - processing, 2 - delivered
- */
 public class OrderDetails {
-
+    private long orderId;
     private User user;
     private ArrayList<OrderItem> orderItems;
     private String orderDate;
@@ -70,5 +69,46 @@ public class OrderDetails {
 
     public void setOrderStatus(short orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public String displayStatus() {
+        switch (orderStatus) {
+            case 0:
+                return "новый заказ";
+            case 1:
+                return "В обработке";
+            case 2:
+                return "Выполнен";
+            default:
+                return "";
+        }
+    }
+
+    public String getTime() throws ParseException {
+        Date dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(orderDate);
+        String time = new SimpleDateFormat("HH:mm").format(dateTime);
+        return time;
+    }
+
+    public String getDate() throws ParseException {
+        Date dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(orderDate);
+        String  date = new SimpleDateFormat("dd-MM-yyyy").format(dateTime);
+        return date;
+    }
+
+    public double getTotal() {
+        double total = 0;
+        for(OrderItem item: orderItems) {
+            total += item.getQuantity() * item.getProduct().getPrice();
+        }
+        return total;
     }
 }

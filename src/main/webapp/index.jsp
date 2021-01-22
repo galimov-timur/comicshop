@@ -7,7 +7,7 @@
             <section>
                 <div class="row">
                     <div class="heading">
-                        <h3>${categoryName}</h3>
+                        <h3>${name}</h3>
                     </div>
                     <c:forEach var="product" items="${products}">
                         <div class="col-sm-3">

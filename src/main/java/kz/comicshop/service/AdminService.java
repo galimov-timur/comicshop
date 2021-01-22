@@ -11,9 +11,9 @@ public class AdminService implements Service {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        String url = "/admin.jsp";
+        String destPage = ADMIN_PAGE;
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
     }
 }

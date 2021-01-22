@@ -18,15 +18,15 @@ public class CartService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = "/cart.jsp";
+        String destPage = CART_PAGE;
 
-        String action = request.getParameter("action");
-        String productId = request.getParameter("id");
+        String action = request.getParameter(ACTION);
+        String productId = request.getParameter(ID);
 
         HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute(CART);
 
-        if(action != null && action.equals("add")) {
+        if(action != null && action.equals(ADD)) {
             if(cart == null) {
                 cart = new Cart();
             }
@@ -41,12 +41,12 @@ public class CartService implements Service {
             cart.addProduct(orderItem);
         }
 
-        if(action != null && action.equals("remove")) {
+        if(action != null && action.equals(REMOVE)) {
             long productIdAsLong = Long.parseLong(productId);
             cart.removeProduct(productIdAsLong);
         }
 
-        session.setAttribute("cart", cart);
+        session.setAttribute(CART, cart);
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
     }

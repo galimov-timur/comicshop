@@ -114,4 +114,43 @@ public class UserDAO {
             pool.freeConnection(connection);
         }
     }
+
+    public static User getUserById(long userId) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT * FROM users WHERE user_id = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, userId);
+            rs = ps.executeQuery();
+            User user = null;
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getLong("user_id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setSalt(rs.getString("salt"));
+                user.setPhone(rs.getString("phone"));
+                user.setRole(rs.getShort("role"));
+                user.setAddress1(rs.getString("address1"));
+                user.setAddress2(rs.getString("address2"));
+                user.setCity(rs.getString("city"));
+                user.setZip(rs.getString("zip"));
+                user.setCountry(rs.getString("country"));
+            }
+            return user;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        } finally {
+            DbUtility.closeResultSet(rs);
+            DbUtility.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+    }
 }

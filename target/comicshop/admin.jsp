@@ -9,8 +9,9 @@
                     <h3>Панель Администратора</h3>
                 </div>
                 <div class="edit_products">
-                    <a href="<c:url value='/admin/add_product'/>">Добавить товар</a>
-                    <a href="<c:url value='/admin/delete_product'/>">Удалить товар</a>
+                    <a href="<c:url value='/admin/add_product'/>">Добавление товара</a>
+                    <a href="<c:url value='/admin/delete_product'/>">Удаление товара</a>
+                    <a href="<c:url value='/admin/order'/>">Управление заказами</a>
                 </div>
             </section>
         </div>
