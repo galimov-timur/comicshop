@@ -20,13 +20,14 @@ public class ServiceFactory {
         SERVICE_MAP.put("/COMICSHOP/SIGNUP", new RegistrationService());
         SERVICE_MAP.put("/COMICSHOP/PRODUCT/SHOW", new ShowProductService());
         SERVICE_MAP.put("/COMICSHOP/ORDER/SHOW", new ShowOrderService());
+        SERVICE_MAP.put("/COMICSHOP/CATEGORY/SHOW", new ShowCategoryService());
         SERVICE_MAP.put("/COMICSHOP/CART", new CartService());
         SERVICE_MAP.put("/COMICSHOP/CHECKOUT", new CheckoutService());
         SERVICE_MAP.put("/COMICSHOP/ADMIN/MENU", new AdminService());
         SERVICE_MAP.put("/COMICSHOP/ADMIN/ORDER", new AdminOrderService());
-        SERVICE_MAP.put("/COMICSHOP/ADMIN/ADD_PRODUCT", new AddProductService());
-        SERVICE_MAP.put("/COMICSHOP/ADMIN/UPLOAD_PRODUCT", new UploadProductService());
-
+        SERVICE_MAP.put("/COMICSHOP/ADMIN/PRODUCT/ADD", new AddProductService());
+        SERVICE_MAP.put("/COMICSHOP/ADMIN/PRODUCT/DELETE", new DeleteProductService());
+        SERVICE_MAP.put("/COMICSHOP/ADMIN/CATEGORY", new AdminCategoryService());
     }
 
     public Service getService(String request) {

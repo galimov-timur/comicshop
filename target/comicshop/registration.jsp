@@ -10,7 +10,7 @@
             ${message}
             <section class="registration-form">
                 <form action="/comicshop/signup" method="post">
-                    <input type="hidden" name="action" value="registerUser">
+                    <input type="hidden" name="action" value="add">
 
                     <label for="firstName"><b>Ваше имя</b></label>
                     <input type="text" placeholder="Указывайте реальное имя" name="firstName" required>
@@ -33,7 +33,7 @@
                     <button type="submit" class="form_btn">Зарегистрироваться</button>
 
                     <div class="signin">
-                        <p>Уже зарегистрированы на COMICSHOP? <a href="login.html">Вход</a></p>
+                        <p>Уже зарегистрированы на COMICSHOP? <a href="<c:url value='/login' />">Вход</a></p>
                     </div>
                 </form>
             </section>

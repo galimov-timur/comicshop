@@ -1,6 +1,7 @@
 package kz.comicshop.data;
 
 import kz.comicshop.entity.Category;
+import kz.comicshop.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class CategoryDAO {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
+
         String query = "INSERT INTO Categories (category_name) VALUES (?)";
         try {
             ps = connection.prepareStatement(query);
@@ -78,6 +80,27 @@ public class CategoryDAO {
         } finally {
             DbUtility.closeResultSet(resultSet);
             DbUtility.closeStatement(preparedStatement);
+            pool.freeConnection(connection);
+        }
+    }
+
+    public static int delete(long categoryId) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        System.out.println(categoryId);
+
+        String query = "DELETE FROM categories WHERE category_id = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, categoryId);
+            System.out.println("removing " + categoryId);
+            return ps.executeUpdate();
+        } catch(SQLException e) {
+            System.out.println(e);
+            return 0;
+        } finally {
+            DbUtility.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }
     }

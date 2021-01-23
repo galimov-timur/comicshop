@@ -9,6 +9,7 @@
                     <h3>Корзина</h3>
                 </div>
                 <div class="cart_items">
+                    <c:if test="${cart != null && cart.getSize() != 0}">
                     <table>
                         <tr>
                             <th>Количество</th>
@@ -33,6 +34,7 @@
                             </tr>
                         </c:forEach>
                     </table>
+                    </c:if>
                     <c:if test="${cart == null || cart.getSize() == 0}">
                         <p class="text-center">Корзина пуста</p>
                     </c:if>
@@ -41,10 +43,12 @@
                             <input type="hidden" name="action" value="shop">
                             <input type="submit" value="Продолжить">
                         </form>
+                        <c:if test="${cart != null && cart.getSize() != 0}">
                         <form action="<c:url value='/checkout' />" method="post">
                              <input type="hidden" name="action" value="checkout">
                              <input type="submit" value="Оформить заказ">
                         </form>
+                        </c:if>
                     </div>
                 </div>
             </section>

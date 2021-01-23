@@ -1,31 +1,31 @@
 package kz.comicshop.service;
 
-import kz.comicshop.data.OrderDetailsDAO;
-import kz.comicshop.entity.OrderDetails;
-import kz.comicshop.entity.User;
+import kz.comicshop.data.ProductDAO;
+import kz.comicshop.entity.Product;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ShowOrderService implements  Service{
+public class ShowCategoryService implements Service {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        String destPage = ORDER_PAGE;
 
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(USER);
+        String destPage = INDEX_PAGE;
 
-        if(user != null) {
-            long userId = user.getId();
-            ArrayList<OrderDetails> orders = OrderDetailsDAO.getOrdersByUserId(userId);
-            request.setAttribute(ORDERS, orders);
+        String categoryId = request.getParameter(ID);
+        String categoryName = request.getParameter(NAME);
+
+        if(categoryId != null && categoryName != null) {
+            long id = Long.parseLong(categoryId);
+            ArrayList<Product> products = ProductDAO.getProductsByCategory(id);
+            request.setAttribute(PRODUCTS, products);
+            request.setAttribute(NAME, categoryName);
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);

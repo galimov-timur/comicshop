@@ -16,7 +16,7 @@
                                     <img src="<c:out value='${product.imageUrl}'/>" alt="">
                                 </div>
                                 <div class="card-title">
-                                    <h4><a href="<c:url value='/product/show?productId=${product.id}' />"><c:out value="${product.name}"/></a></h4>
+                                    <h4><a href="<c:url value='/product/show?id=${product.id}' />"><c:out value="${product.name}"/></a></h4>
                                 </div>
                                 <p class="card-price"><c:out value="${product.price}"/></p>
                                 <a href="<c:url value='/cart?action=add&id=${product.id}'/>" class="form_btn">В корзину</a>

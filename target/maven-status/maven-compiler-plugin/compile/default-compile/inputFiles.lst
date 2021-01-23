@@ -2,9 +2,11 @@
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/RegistrationService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/factory/ServiceFactory.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/filter/EncodingFilter.java
+/home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/ShowCategoryService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/AdminOrderService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/AdminService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/AddProductService.java
+/home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/AdminCategoryService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/LoginService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/entity/OrderItem.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/entity/OrderDetails.java
@@ -16,6 +18,7 @@
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/ShowOrderService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/UserDAO.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/entity/Cart.java
+/home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/DeleteProductService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/entity/Product.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/entity/Category.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/controller/ComicshopController.java
@@ -24,7 +27,6 @@
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/entity/User.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/CartService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/ProductDAO.java
-/home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/UploadProductService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/ConnectionPool.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/Test.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/CategoryDAO.java

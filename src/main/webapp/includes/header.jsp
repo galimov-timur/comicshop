@@ -61,7 +61,7 @@
         <div class="container">
             <ul class="menu clearfix">
                 <c:forEach var="category" items="${categories}">
-                    <li class="menu_item"><a href="<c:url value='/product/show?id=${category.id}&name=${category.name}' />"><c:out value="${category.name}" /></a></li>
+                    <li class="menu_item"><a href="<c:url value='/category/show?id=${category.id}&name=${category.name}' />"><c:out value="${category.name}" /></a></li>
                 </c:forEach>
             </ul>
         </div>

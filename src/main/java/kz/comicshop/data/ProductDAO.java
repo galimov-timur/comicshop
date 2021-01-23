@@ -49,6 +49,7 @@ public class ProductDAO {
                 product.setName(resultSet.getString("product_name"));
                 product.setPrice(resultSet.getDouble("product_price"));
                 product.setImageUrl(resultSet.getString("product_img_url"));
+                product.setQuantity(resultSet.getInt("product_quantity"));
                 products.add(product);
             }
             return products;
@@ -89,6 +90,25 @@ public class ProductDAO {
             return null;
         } finally {
             DbUtility.closeResultSet(rs);
+            DbUtility.closePreparedStatement(ps);
+            pool.freeConnection(connection);
+        }
+    }
+
+    public static int delete(long productId) {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query = "DELETE FROM products WHERE product_id = ?";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setLong(1, productId);
+            return ps.executeUpdate();
+        } catch(SQLException e) {
+            System.out.println(e);
+            return 0;
+        } finally {
             DbUtility.closePreparedStatement(ps);
             pool.freeConnection(connection);
         }

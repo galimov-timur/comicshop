@@ -10,7 +10,7 @@
             ${message}
             <section class="login-form">
                 <form action="/comicshop/login" method="post">
-                    <input type="hidden" name="action" value="login">
+                    <input type="hidden" name="action" value="signIn">
 
                     <label for="email"><b>Ваш email адрес</b></label>
                     <input type="text" placeholder="Пример: nurlan@mail.ru" name="email" required>
@@ -21,7 +21,7 @@
                     <button type="submit" class="form_btn">Войти</button>
 
                     <div class="signin">
-                        <p>Не зарегистрированы на COMICSHOP? <a href="registration.html">Регистрация</a></p>
+                        <p>Не зарегистрированы на COMICSHOP? <a href="<c:url value='/signup' />">Регистрация</a></p>
                     </div>
                 </form>
             </section>

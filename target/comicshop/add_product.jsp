@@ -10,7 +10,8 @@
                 </div>
                 ${message}
                 <div class="add_product_form">
-                    <form action="/comicshop/admin/upload_product" method="post" enctype="multipart/form-data">
+                    <form action="/comicshop/admin/product/add" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="add">
                         <label for="productCategory">Категория товара</label>
                         <select name="productCategory">
                             <option>Выберите категорию</option>

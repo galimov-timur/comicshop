@@ -8,10 +8,20 @@
                 <div class="page_heading">
                     <h3>Панель Администратора</h3>
                 </div>
-                <div class="edit_products">
-                    <a href="<c:url value='/admin/add_product'/>">Добавление товара</a>
-                    <a href="<c:url value='/admin/delete_product'/>">Удаление товара</a>
-                    <a href="<c:url value='/admin/order'/>">Управление заказами</a>
+                <div class="row">
+                    <div class="edit_products col-sm-4 text-center">
+                        <h4 class="text-center">Товары</h4>
+                        <a href="<c:url value='/admin/product/add'/>">Добавление товара</a>
+                        <a href="<c:url value='/admin/product/delete'/>">Удаление товара</a>
+                    </div>
+                    <div class="edit_orders col-sm-4">
+                        <h4 class="text-center">Заказы</h4>
+                        <a href="<c:url value='/admin/order'/>">Управление заказами</a>
+                    </div>
+                    <div class="edit_categories col-sm-4">
+                        <h4 class="text-center">Категории</h4>
+                        <a href="<c:url value='/admin/category'/>">Управление категориями</a>
+                    </div>
                 </div>
             </section>
         </div>

@@ -18,45 +18,45 @@ public class RegistrationService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = "/registration.jsp";
-        String action = request.getParameter("action");
+        String destPage = SIGNUP_PAGE;
+        String action = request.getParameter(ACTION);
 
-        if(action == null) {
-            destPage = "/registration.jsp";
-        } else if(action.equals("registerUser")) {
-            String firstName = request.getParameter("firstName");
-            String lastName = request.getParameter("lastName");
-            String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
-            String password = request.getParameter("password");
-            String passwordRepeat = request.getParameter("passwordRepeat");
+        if(action != null) {
+            if(action.equals(ADD)) {
+                String firstName = request.getParameter("firstName");
+                String lastName = request.getParameter("lastName");
+                String email = request.getParameter("email");
+                String phone = request.getParameter("phone");
+                String password = request.getParameter("password");
+                String passwordRepeat = request.getParameter("passwordRepeat");
 
-            User user = new User();
+                User user = new User();
 
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setPhone(phone);
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                user.setEmail(email);
+                user.setPhone(phone);
 
-            if(password.equals(passwordRepeat)) {
-                String salt = PasswordUtil.saltPassword(password);
-                user.setSalt(salt);
-                try {
-                    String hashedPassword = PasswordUtil.hashPassword(password + salt);
-                    user.setPassword(hashedPassword);
-                } catch(NoSuchAlgorithmException e) {
-                    System.out.println(e.getMessage());
+                if (password.equals(passwordRepeat)) {
+                    String salt = PasswordUtil.saltPassword(password);
+                    user.setSalt(salt);
+                    try {
+                        String hashedPassword = PasswordUtil.hashPassword(password + salt);
+                        user.setPassword(hashedPassword);
+                    } catch (NoSuchAlgorithmException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
-            }
 
-            long userId = UserDAO.insertUser(user);
-            user.setId(userId);
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            destPage = "/index.jsp";
+                long userId = UserDAO.insertUser(user);
+                user.setId(userId);
+                HttpSession session = request.getSession();
+                session.setAttribute(USER, user);
+                destPage = INDEX_PAGE;
+            }
         }
 
-        if(destPage.equals("/index.jsp")) {
+        if(destPage.equals(INDEX_PAGE)) {
             response.sendRedirect("/comicshop");
         } else {
             RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);

@@ -31,7 +31,7 @@ public class CheckoutService implements Service {
         User user = (User) session.getAttribute(USER);
         Cart cart = (Cart)session.getAttribute(CART);
 
-        if(cart.getSize() > 0) {
+        if(cart != null && cart.getSize() > 0) {
             if(user == null) {
                 String nextPage = ADDRESS_PAGE;
                 String message = "<div class='message --warning'><p>Для продолжения требуется авторизация!</p></div>";

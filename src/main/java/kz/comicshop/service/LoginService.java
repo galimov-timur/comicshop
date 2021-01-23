@@ -19,51 +19,52 @@ public class LoginService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = "/login.jsp";
-        String action = request.getParameter("action");
+        String destPage = LOGIN_PAGE;
+        String action = request.getParameter(ACTION);
         String message = "";
 
-        if(action == null) {
-            destPage = "/login.jsp";
-        } else if(action.equals("login")) {
+        if(action != null) {
 
-            String userEmail = request.getParameter("email");
-            String passwordToCheck = request.getParameter("password");
-            User user = UserDAO.getUserByEmail(userEmail);
-            boolean isRegisteredUser = false;
+            if(action.equals(SIGN_IN)) {
 
-            if(user != null) {
-                String userPassword = user.getPassword();
-                String userSalt = user.getSalt();
+                String userEmail = request.getParameter(EMAIL);
+                String passwordToCheck = request.getParameter(PASSWORD);
+                User user = UserDAO.getUserByEmail(userEmail);
+                boolean isRegisteredUser = false;
 
-                try {
-                    String hashedPasswordToCheck = PasswordUtil.hashPassword(passwordToCheck + userSalt);
-                    isRegisteredUser = hashedPasswordToCheck.equals(userPassword);
-                } catch (NoSuchAlgorithmException e) {
-                    System.out.println(e);
-                }
+                if (user != null) {
+                    String userPassword = user.getPassword();
+                    String userSalt = user.getSalt();
 
-                if(isRegisteredUser) {
-                    HttpSession session = request.getSession();
-                    session.setAttribute("user", user);
-                    String nextPage = (String) session.getAttribute("nextPage");
-                    if(nextPage != null) {
-                        destPage = nextPage;
-                        session.removeAttribute("nextPage");
+                    try {
+                        String hashedPasswordToCheck = PasswordUtil.hashPassword(passwordToCheck + userSalt);
+                        isRegisteredUser = hashedPasswordToCheck.equals(userPassword);
+                    } catch (NoSuchAlgorithmException e) {
+                        System.out.println(e);
+                    }
+
+                    if (isRegisteredUser) {
+                        HttpSession session = request.getSession();
+                        session.setAttribute(USER, user);
+                        String nextPage = (String) session.getAttribute(NEXT_PAGE);
+                        if (nextPage != null) {
+                            destPage = nextPage;
+                            session.removeAttribute(NEXT_PAGE);
+                        } else {
+                            destPage = INDEX_PAGE;
+                        }
                     } else {
-                        destPage = "/index.jsp";
+                        message = "<div class='message --warning'><p>Введен неверный пароль</p></div>";
+                        request.setAttribute(MESSAGE, message);
                     }
                 } else {
-                    message = "<div class='message --warning'><p>Введен неверный пароль</p></div>";
-                    request.setAttribute("message", message);
+                    message = "<div class='message --warning'><p>Пользователь с таким email адресом не зарегистрирован</p></div>";
+                    request.setAttribute(MESSAGE, message);
                 }
-            } else {
-                message = "<div class='message --warning'><p>Пользователь с таким email адресом не зарегистрирован</p></div>";
-                request.setAttribute("message", message);
             }
         }
 
-        if(destPage.equals("/index.jsp")) {
+        if(destPage.equals(INDEX_PAGE)) {
             response.sendRedirect("/comicshop");
         } else {
             RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
