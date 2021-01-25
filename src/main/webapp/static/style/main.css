@@ -499,6 +499,13 @@ footer a {
   border-color: #bb1206;
 }
 
+.form-message {
+    margin-top: -15px;
+    margin-bottom: 15px;
+    color: red;
+    font-size: 13px;
+}
+
 /***************************** UTILITY ****************************/
 .text-center {
     text-align: center;

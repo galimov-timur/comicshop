@@ -84,7 +84,6 @@ public class CheckoutService implements Service {
             destPage = CART_PAGE;
         }
 
-
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
     }

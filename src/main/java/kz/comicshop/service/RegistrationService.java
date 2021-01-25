@@ -1,6 +1,7 @@
 package kz.comicshop.service;
 
 import kz.comicshop.data.UserDAO;
+import kz.comicshop.entity.FormValidator;
 import kz.comicshop.entity.User;
 import kz.comicshop.util.PasswordUtil;
 
@@ -30,14 +31,22 @@ public class RegistrationService implements Service {
                 String password = request.getParameter("password");
                 String passwordRepeat = request.getParameter("passwordRepeat");
 
-                User user = new User();
+                FormValidator formValidation = new FormValidator();
+                formValidation.setFirstName(firstName);
+                formValidation.setLastName(lastName);
+                formValidation.setEmail(email);
+                formValidation.setPhone(phone);
+                formValidation.setPassword(password);
+                formValidation.setPasswordRepeat(passwordRepeat);
 
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setEmail(email);
-                user.setPhone(phone);
+                if(formValidation.process()) {
+                    User user = new User();
 
-                if (password.equals(passwordRepeat)) {
+                    user.setFirstName(firstName);
+                    user.setLastName(lastName);
+                    user.setEmail(email);
+                    user.setPhone(phone);
+
                     String salt = PasswordUtil.saltPassword(password);
                     user.setSalt(salt);
                     try {
@@ -46,13 +55,16 @@ public class RegistrationService implements Service {
                     } catch (NoSuchAlgorithmException e) {
                         System.out.println(e.getMessage());
                     }
-                }
 
-                long userId = UserDAO.insertUser(user);
-                user.setId(userId);
-                HttpSession session = request.getSession();
-                session.setAttribute(USER, user);
-                destPage = INDEX_PAGE;
+                    long userId = UserDAO.insertUser(user);
+                    user.setId(userId);
+                    HttpSession session = request.getSession();
+                    session.setAttribute(USER, user);
+                    destPage = INDEX_PAGE;
+                } else {
+                    request.setAttribute("form", formValidation);
+                    destPage = SIGNUP_PAGE;
+                }
             }
         }
 
