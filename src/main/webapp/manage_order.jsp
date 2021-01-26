@@ -37,7 +37,7 @@
                     </div>
                     <div class="cart_btns">
                          <form action="<c:url value='/admin/order?id=${orderDetails.orderId}' />" method="post">
-                              <input type="hidden" name="action" value="updateStatus">
+                              <input type="hidden" name="action" value="update">
                               <label for="orderStatus">Изменить статус заказа</label>
                                  <select name="orderStatus">
                                     <option value="0">Новый заказ</option>
@@ -47,7 +47,7 @@
                               <input type="submit" value="Применить">
                          </form>
                          <form action="<c:url value='/admin/order?id=${orderDetails.orderId}' />" method="post">
-                            <input type="hidden" name="action" value="deleteOrder">
+                            <input type="hidden" name="action" value="remove">
                             <input type="submit" value="Удалить заказ">
                          </form>
                     </div>

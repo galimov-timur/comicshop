@@ -1,25 +1,33 @@
 package kz.comicshop.data;
 
 import kz.comicshop.entity.Category;
-import kz.comicshop.entity.User;
+import kz.comicshop.util.DbUtility;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CategoryDAO {
+
+    static final Logger logger = Logger.getLogger(CategoryDAO.class);
+
+    private final static String INSERT_QUERY = "INSERT INTO Categories (category_name) VALUES (?)";
+    private final static String SELECT_ALL_QUERY = "SELECT * FROM categories";
+    private final static String SELECT_ONE_QUERY = "SELECT * FROM categories WHERE category_id=?";
+    private final static String DELETE_QUERY = "DELETE FROM categories WHERE category_id = ?";
+
     public static int insertCategory(Category category) {
+
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
-        String query = "INSERT INTO Categories (category_name) VALUES (?)";
         try {
-            ps = connection.prepareStatement(query);
+            ps = connection.prepareStatement(INSERT_QUERY);
             ps.setString(1, category.getName());
             return ps.executeUpdate();
         } catch(SQLException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return 0;
         } finally {
             DbUtility.closePreparedStatement(ps);
@@ -28,15 +36,15 @@ public class CategoryDAO {
     }
 
     public static ArrayList<Category> getCategories() {
+
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         Statement statement = null;
         ResultSet rs = null;
 
-        String query = "SELECT * FROM categories;";
         try {
             statement = connection.createStatement();
-            rs = statement.executeQuery(query);
+            rs = statement.executeQuery(SELECT_ALL_QUERY);
             ArrayList<Category> categories = new ArrayList<>();
             Category category = null;
             while(rs.next()) {
@@ -47,7 +55,7 @@ public class CategoryDAO {
             }
             return categories;
         } catch(SQLException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         } finally {
             DbUtility.closeResultSet(rs);
@@ -57,14 +65,14 @@ public class CategoryDAO {
     }
 
     public static Category getCategoryById(Long id) {
+
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        String query = "SELECT * FROM categories WHERE category_id=?";
         try {
-            preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(SELECT_ONE_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             Category category = null;
@@ -75,7 +83,7 @@ public class CategoryDAO {
             }
             return category;
         } catch(SQLException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         } finally {
             DbUtility.closeResultSet(resultSet);
@@ -85,19 +93,17 @@ public class CategoryDAO {
     }
 
     public static int delete(long categoryId) {
+
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
-        System.out.println(categoryId);
 
-        String query = "DELETE FROM categories WHERE category_id = ?";
         try {
-            ps = connection.prepareStatement(query);
+            ps = connection.prepareStatement(DELETE_QUERY);
             ps.setLong(1, categoryId);
-            System.out.println("removing " + categoryId);
             return ps.executeUpdate();
         } catch(SQLException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());
             return 0;
         } finally {
             DbUtility.closePreparedStatement(ps);

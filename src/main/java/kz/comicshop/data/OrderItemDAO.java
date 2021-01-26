@@ -3,6 +3,8 @@ package kz.comicshop.data;
 import kz.comicshop.entity.OrderDetails;
 import kz.comicshop.entity.OrderItem;
 import kz.comicshop.entity.Product;
+import kz.comicshop.util.DbUtility;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,15 +13,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class OrderItemDAO {
+
+    static final Logger logger = Logger.getLogger(OrderItemDAO.class);
+
+    private static final String INSERT = "INSERT INTO order_item (order_details_id, product_id, quantity) VALUES (?, ?, ?)";
+    private static final String SELECT_BY_ORDER = "SELECT order_item.quantity, products.product_id, products.product_name, products.product_price FROM order_item " +
+                                                  "INNER JOIN products ON order_item.product_id = products.product_id " +
+                                                  "WHERE order_item.order_details_id = ?";
+
     public static int insertOrderItems(OrderDetails order, long orderId) {
+
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
-        String query = "INSERT INTO order_item (order_details_id, product_id, quantity) VALUES (?, ?, ?)";
         try {
             for(OrderItem item: order.getOrderItems()) {
-                ps = connection.prepareStatement(query);
+                ps = connection.prepareStatement(INSERT);
                 ps.setLong(1, orderId);
                 ps.setLong(2, item.getProduct().getId());
                 ps.setDouble(3, item.getQuantity());
@@ -27,7 +37,7 @@ public class OrderItemDAO {
             }
             return 1;
         } catch(SQLException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return 0;
         } finally {
             DbUtility.closePreparedStatement(ps);
@@ -36,16 +46,14 @@ public class OrderItemDAO {
     }
 
     public static ArrayList<OrderItem> getOrderItemsByOrderId(long orderDetailsId) {
+
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String query = "SELECT order_item.quantity, products.product_id, products.product_name, products.product_price FROM order_item " +
-                "INNER JOIN products ON order_item.product_id = products.product_id " +
-                "WHERE order_item.order_details_id = ?";
         try {
-            ps = connection.prepareStatement(query);
+            ps = connection.prepareStatement(SELECT_BY_ORDER);
             ps.setLong(1, orderDetailsId);
             rs = ps.executeQuery();
             OrderItem orderItem = null;
@@ -63,7 +71,7 @@ public class OrderItemDAO {
             }
             return orderItems;
         } catch(SQLException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         } finally {
             DbUtility.closeResultSet(rs);

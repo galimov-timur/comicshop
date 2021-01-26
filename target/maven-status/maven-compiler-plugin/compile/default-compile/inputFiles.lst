@@ -1,5 +1,6 @@
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/util/PasswordUtil.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/RegistrationService.java
+/home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/entity/FormValidator.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/factory/ServiceFactory.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/filter/EncodingFilter.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/ShowCategoryService.java
@@ -28,6 +29,5 @@
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/service/CartService.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/ProductDAO.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/ConnectionPool.java
-/home/timur/Desktop/EE/project/comicshop/src/main/java/Test.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/CategoryDAO.java
 /home/timur/Desktop/EE/project/comicshop/src/main/java/kz/comicshop/data/OrderItemDAO.java

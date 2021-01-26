@@ -13,6 +13,10 @@
     <param-name>imageSource</param-name>
     <param-value>/home/timur/Desktop/EE/images/</param-value>
   </context-param>
+  <context-param>
+    <param-name>logConfigFile</param-name>
+    <param-value>../resources/log4j.properties</param-value>
+  </context-param>
 
   <filter>
     <filter-name>EncodingFilter</filter-name>
@@ -22,6 +26,10 @@
     <filter-name>EncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <listener>
+    <listener-class></listener-class>
+  </listener>
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>

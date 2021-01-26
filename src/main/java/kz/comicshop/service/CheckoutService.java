@@ -7,6 +7,7 @@ import kz.comicshop.entity.Cart;
 import kz.comicshop.entity.OrderDetails;
 import kz.comicshop.entity.OrderItem;
 import kz.comicshop.entity.User;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class CheckoutService implements Service {
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
@@ -40,7 +42,7 @@ public class CheckoutService implements Service {
                 destPage = LOGIN_PAGE;
             }
 
-            if(action != null && action.equals("updateAddress")) {
+            if(action != null && action.equals(UPDATE)) {
                 String address1 = request.getParameter("address1");
                 String address2 = request.getParameter("address2");
                 String city = request.getParameter("city");
@@ -55,7 +57,7 @@ public class CheckoutService implements Service {
                 destPage = INVOICE_PAGE;
             }
 
-            if(action != null && action.equals("saveOrder")) {
+            if(action != null && action.equals(ADD)) {
                 ArrayList<OrderItem> orderItems = cart.getCartProducts();
 
                 // total sum of products
@@ -73,8 +75,10 @@ public class CheckoutService implements Service {
                 long orderId = OrderDetailsDAO.insertOrder(orderDetails);
 
                 // store in database products related to this order
-                OrderItemDAO.insertOrderItems(orderDetails, orderId);
-                cart.empty();
+                if(orderId != 0) {
+                    OrderItemDAO.insertOrderItems(orderDetails, orderId);
+                    cart.empty();
+                }
 
                 request.setAttribute(ORDER_ID, orderId);
                 session.setAttribute(CART, cart);

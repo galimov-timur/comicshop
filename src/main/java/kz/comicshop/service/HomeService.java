@@ -18,7 +18,7 @@ public class HomeService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String url = INDEX_PAGE;
+        String destPage = INDEX_PAGE;
         long defaultCategoryId = 1;
 
         Category category = CategoryDAO.getCategoryById(defaultCategoryId);
@@ -29,7 +29,7 @@ public class HomeService implements Service {
             request.setAttribute(NAME, category.getName());
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
     }
 }

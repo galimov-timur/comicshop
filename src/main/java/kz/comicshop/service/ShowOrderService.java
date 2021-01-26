@@ -17,6 +17,7 @@ public class ShowOrderService implements  Service{
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
+
         String destPage = ORDER_PAGE;
 
         HttpSession session = request.getSession();

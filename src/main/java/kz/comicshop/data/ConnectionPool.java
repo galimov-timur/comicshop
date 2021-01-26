@@ -1,11 +1,16 @@
 package kz.comicshop.data;
 
+import org.apache.log4j.Logger;
+
 import java.sql.*;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 public class ConnectionPool {
+
+    static final Logger logger = Logger.getLogger(ConnectionPool.class);
+
     private static ConnectionPool pool = null;
     private static DataSource dataSource = null;
 
@@ -14,7 +19,7 @@ public class ConnectionPool {
             InitialContext ic = new InitialContext();
             dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/comicshop");
         } catch(NamingException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
     }
 
@@ -29,7 +34,7 @@ public class ConnectionPool {
         try {
             return dataSource.getConnection();
         } catch(SQLException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());;
             return null;
         }
     }
@@ -38,7 +43,7 @@ public class ConnectionPool {
         try {
             c.close();
         } catch(SQLException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());;
         }
     }
 }

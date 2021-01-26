@@ -3,7 +3,6 @@ kz/comicshop/service/LogoutService.class
 kz/comicshop/controller/ComicshopController.class
 kz/comicshop/data/ProductDAO.class
 kz/comicshop/util/PasswordUtil.class
-Test.class
 kz/comicshop/service/AddProductService.class
 kz/comicshop/data/CategoryDAO.class
 kz/comicshop/filter/EncodingFilter.class
@@ -24,6 +23,7 @@ kz/comicshop/data/DbUtility.class
 kz/comicshop/entity/Category.class
 kz/comicshop/service/Service.class
 kz/comicshop/data/UserDAO.class
+kz/comicshop/entity/FormValidator.class
 kz/comicshop/service/CartService.class
 kz/comicshop/entity/OrderItem.class
 kz/comicshop/entity/OrderDetails.class

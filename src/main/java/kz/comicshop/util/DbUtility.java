@@ -1,8 +1,15 @@
-package kz.comicshop.data;
+package kz.comicshop.util;
 
-import java.sql.*;
+import org.apache.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DbUtility {
+
+    static final Logger logger = Logger.getLogger(DbUtility.class);
 
     public static void closeStatement(Statement s) {
         try {
@@ -10,7 +17,7 @@ public class DbUtility {
                 s.close();
             }
         } catch(SQLException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
     }
 
@@ -20,7 +27,7 @@ public class DbUtility {
                 ps.close();
             }
         } catch(SQLException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
     }
 
@@ -30,7 +37,7 @@ public class DbUtility {
                 rs.close();
             }
         } catch(SQLException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
     }
 }

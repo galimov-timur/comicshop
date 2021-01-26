@@ -4,6 +4,7 @@ import kz.comicshop.data.ProductDAO;
 import kz.comicshop.entity.Cart;
 import kz.comicshop.entity.OrderItem;
 import kz.comicshop.entity.Product;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class CartService implements Service {
+
+    static final Logger logger = Logger.getLogger(CartService.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
@@ -26,7 +30,13 @@ public class CartService implements Service {
             HttpSession session = request.getSession();
             Cart cart = (Cart) session.getAttribute(CART);
             String productId = request.getParameter(ID);
-            long productIdAsLong = Long.parseLong(productId);
+
+            long productIdAsLong = 0;
+            try {
+                productIdAsLong = Long.parseLong(productId);
+            } catch(NumberFormatException e) {
+                logger.error(e.getMessage());
+            }
 
             if(action.equals(ADD)) {
 

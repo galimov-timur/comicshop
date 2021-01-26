@@ -10,7 +10,7 @@
             ${message}
             <section class="registration-form">
                 <form action="/comicshop/checkout" method="post">
-                    <input type="hidden" name="action" value="updateAddress">
+                    <input type="hidden" name="action" value="update">
 
                     <label for="address1"><b>Адрес 1</b></label>
                     <input type="text" name="address1" value="${user.address1}" required>

@@ -2,6 +2,7 @@ package kz.comicshop.service;
 
 import kz.comicshop.data.ProductDAO;
 import kz.comicshop.entity.Product;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,25 +17,36 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 public class AddProductService implements Service {
+
+    static final Logger logger = Logger.getLogger(AddProductService.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
+
         String destPage = ADD_PRODUCT_PAGE;
         String action = request.getParameter(ACTION);
 
         if(action != null) {
             if(action.equals(ADD)) {
-                String productCategoryId = request.getParameter("productCategory");
-                long categoryId = Long.parseLong(productCategoryId);
 
+                String productCategoryId = request.getParameter("productCategory");
                 String name = request.getParameter("productName");
                 String description = request.getParameter("productDescription");
-
                 String productQuantity = request.getParameter("productQuantity");
-                int quantity = Integer.parseInt(productQuantity);
-
                 String productPrice = request.getParameter("productPrice");
-                double price = Double.parseDouble(productPrice);
+
+                double price = 0.0;
+                int quantity = 0;
+                long categoryId = 0;
+
+                try {
+                    price = Double.parseDouble(productPrice);
+                    quantity = Integer.parseInt(productQuantity);
+                    categoryId = Long.parseLong(productCategoryId);
+                } catch(NumberFormatException e) {
+                    logger.error(e.getMessage());
+                }
 
                 Part filePart = request.getPart("productImage");
                 InputStream fileInputStream = filePart.getInputStream();

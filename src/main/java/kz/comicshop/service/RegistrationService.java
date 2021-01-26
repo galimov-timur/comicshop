@@ -4,6 +4,7 @@ import kz.comicshop.data.UserDAO;
 import kz.comicshop.entity.FormValidator;
 import kz.comicshop.entity.User;
 import kz.comicshop.util.PasswordUtil;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +16,9 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class RegistrationService implements Service {
+
+    static final Logger logger = Logger.getLogger(RegistrationService.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
@@ -53,7 +57,7 @@ public class RegistrationService implements Service {
                         String hashedPassword = PasswordUtil.hashPassword(password + salt);
                         user.setPassword(hashedPassword);
                     } catch (NoSuchAlgorithmException e) {
-                        System.out.println(e.getMessage());
+                        logger.error(e.getMessage());
                     }
 
                     long userId = UserDAO.insertUser(user);
@@ -62,7 +66,7 @@ public class RegistrationService implements Service {
                     session.setAttribute(USER, user);
                     destPage = INDEX_PAGE;
                 } else {
-                    request.setAttribute("form", formValidation);
+                    request.setAttribute(FORM, formValidation);
                     destPage = SIGNUP_PAGE;
                 }
             }

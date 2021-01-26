@@ -16,6 +16,7 @@ public interface Service {
     public static final String PASSWORD = "password";
     public static final String SIGN_IN = "signIn";
     public static final String MESSAGE = "message";
+    public static final String FORM = "form";
     public static final String PRODUCTS = "products";
     public static final String PRODUCT = "product";
     public static final String CATEGORIES = "categories";
@@ -27,8 +28,11 @@ public interface Service {
     public static final String ADD = "add";
     public static final String REMOVE = "remove";
     public static final String ID = "id";
+    public static final String EDIT = "edit";
     public static final String ORDER_ID = "orderId";
     public static final String CATEGORY_ID = "categoryId";
+    public static final String UPDATE = "update";
+    public static final String ORDER_STATUS = "orderStatus";
 
     // PAGES
 

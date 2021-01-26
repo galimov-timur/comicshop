@@ -36,7 +36,7 @@
                     </div>
                     <div class="cart_btns">
                          <form action="<c:url value='/checkout' />" method="post">
-                              <input type="hidden" name="action" value="saveOrder">
+                              <input type="hidden" name="action" value="add">
                               <input type="submit" value="Подтвердить заказ">
                          </form>
                     </div>

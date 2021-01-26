@@ -3,6 +3,7 @@ package kz.comicshop.service;
 import kz.comicshop.data.UserDAO;
 import kz.comicshop.entity.User;
 import kz.comicshop.util.PasswordUtil;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,7 +14,10 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
+
 public class LoginService implements Service {
+
+    static final Logger logger = Logger.getLogger(LoginService.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
@@ -40,7 +44,7 @@ public class LoginService implements Service {
                         String hashedPasswordToCheck = PasswordUtil.hashPassword(passwordToCheck + userSalt);
                         isRegisteredUser = hashedPasswordToCheck.equals(userPassword);
                     } catch (NoSuchAlgorithmException e) {
-                        System.out.println(e);
+                        logger.error(e.getMessage());
                     }
 
                     if (isRegisteredUser) {
