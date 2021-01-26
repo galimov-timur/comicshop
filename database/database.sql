@@ -70,6 +70,8 @@ CREATE TABLE order_item (
 insert into users("first_name", "last_name", "email", "password", "salt", "phone", "role") 
 	values('admin', 'comicshop', 'admin@cs.kz', 'rXbpWe9YglYwLMUKw5cDyifUiS0sj0MsdbT0hZU/Bec=', 'qvwMecriGmeEXv0H3tw7nQ==', '87476752274', '1');
 
+insert into users("first_name", "last_name", "email", "password", "salt", "phone", "role")
+	values('user', 'comicshop', 'user@cs.kz', 'JUzYUHB3RA6z9T3lCuUL7uL9WZfp7lpNKEFBADLfqWU=', '96bW5gxa3U9FePPD+ILi3w==', '87476752274', '0');
 
 insert into categories(category_name) Values('Комиксы');
 insert into categories(category_name) Values('Манга');
