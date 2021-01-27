@@ -2,6 +2,7 @@ package kz.comicshop.service;
 
 import kz.comicshop.data.CategoryDAO;
 import kz.comicshop.entity.Category;
+import kz.comicshop.util.ConfigurationManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -21,7 +22,7 @@ public class AdminCategoryService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = CATEGORY_PAGE;
+        String destPage = ConfigurationManager.getProperty("path.page.category");
         String action = request.getParameter(ACTION);
 
 

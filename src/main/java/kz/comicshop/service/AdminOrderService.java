@@ -4,6 +4,7 @@ import kz.comicshop.data.OrderDetailsDAO;
 import kz.comicshop.data.OrderItemDAO;
 import kz.comicshop.entity.OrderDetails;
 import kz.comicshop.entity.OrderItem;
+import kz.comicshop.util.ConfigurationManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -22,7 +23,7 @@ public class AdminOrderService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ORDER_PAGE;
+        String destPage = ConfigurationManager.getProperty("path.page.order");
         String orderDetailsIdString = request.getParameter(ID);
         String action = request.getParameter(ACTION);
         String message = "";
@@ -44,7 +45,7 @@ public class AdminOrderService implements Service {
                 }
 
                 request.setAttribute(ORDER_DETAILS, orderDetails);
-                destPage = MANAGE_ORDER_PAGE;
+                destPage = ConfigurationManager.getProperty("path.page.manage_order");
             } else if (action.equals(UPDATE)) {
                 String newStatus = request.getParameter(ORDER_STATUS);
 

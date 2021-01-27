@@ -2,6 +2,7 @@ package kz.comicshop.service;
 
 import kz.comicshop.data.ProductDAO;
 import kz.comicshop.entity.Product;
+import kz.comicshop.util.ConfigurationManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -19,8 +20,7 @@ public class ShowProductService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = INDEX_PAGE;
-
+        String destPage = ConfigurationManager.getProperty("path.page.index");
         String productId = request.getParameter(ID);
 
         if(productId != null) {
@@ -32,7 +32,7 @@ public class ShowProductService implements Service {
             }
             Product product = ProductDAO.getProductById(productIdAsLong);
             request.setAttribute(PRODUCT, product);
-            destPage = PRODUCT_PAGE;
+            destPage = ConfigurationManager.getProperty("path.page.product");
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);

@@ -14,6 +14,7 @@ public class ServiceFactory {
     }
 
     static {
+        SERVICE_MAP.put("/ERROR", new ErrorService());
         SERVICE_MAP.put("/COMICSHOP/", new HomeService());
         SERVICE_MAP.put("/COMICSHOP/LOGIN", new LoginService());
         SERVICE_MAP.put("/COMICSHOP/LOGOUT", new LogoutService());

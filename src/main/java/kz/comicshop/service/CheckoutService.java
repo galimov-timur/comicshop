@@ -7,6 +7,7 @@ import kz.comicshop.entity.Cart;
 import kz.comicshop.entity.OrderDetails;
 import kz.comicshop.entity.OrderItem;
 import kz.comicshop.entity.User;
+import kz.comicshop.util.ConfigurationManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -26,7 +27,7 @@ public class CheckoutService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ADDRESS_PAGE;
+        String destPage = ConfigurationManager.getProperty("path.page.address");
         String action = request.getParameter(ACTION);
 
         HttpSession session = request.getSession();
@@ -35,11 +36,11 @@ public class CheckoutService implements Service {
 
         if(cart != null && cart.getSize() > 0) {
             if(user == null) {
-                String nextPage = ADDRESS_PAGE;
+                String nextPage = ConfigurationManager.getProperty("path.page.address");
                 String message = "<div class='message --warning'><p>Для продолжения требуется авторизация!</p></div>";
                 session.setAttribute(NEXT_PAGE, nextPage);
                 request.setAttribute(MESSAGE, message);
-                destPage = LOGIN_PAGE;
+                destPage = ConfigurationManager.getProperty("path.page.login");
             }
 
             if(action != null && action.equals(UPDATE)) {
@@ -54,7 +55,7 @@ public class CheckoutService implements Service {
                 user.setZip(zip);
                 user.setCountry(country);
                 UserDAO.updateAddress(user);
-                destPage = INVOICE_PAGE;
+                destPage = ConfigurationManager.getProperty("path.page.invoice");
             }
 
             if(action != null && action.equals(ADD)) {
@@ -82,10 +83,10 @@ public class CheckoutService implements Service {
 
                 request.setAttribute(ORDER_ID, orderId);
                 session.setAttribute(CART, cart);
-                destPage = THANKS_PAGE;
+                destPage = ConfigurationManager.getProperty("path.page.thanks");
             }
         } else {
-            destPage = CART_PAGE;
+            destPage = ConfigurationManager.getProperty("path.page.cart");
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);

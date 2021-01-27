@@ -2,6 +2,7 @@ package kz.comicshop.service;
 
 import kz.comicshop.data.UserDAO;
 import kz.comicshop.entity.User;
+import kz.comicshop.util.ConfigurationManager;
 import kz.comicshop.util.PasswordUtil;
 import org.apache.log4j.Logger;
 
@@ -23,7 +24,7 @@ public class LoginService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = LOGIN_PAGE;
+        String destPage = ConfigurationManager.getProperty("path.page.login");
         String action = request.getParameter(ACTION);
         String message = "";
 
@@ -55,7 +56,7 @@ public class LoginService implements Service {
                             destPage = nextPage;
                             session.removeAttribute(NEXT_PAGE);
                         } else {
-                            destPage = INDEX_PAGE;
+                            destPage = ConfigurationManager.getProperty("path.page.index");
                         }
                     } else {
                         message = "<div class='message --warning'><p>Введен неверный пароль</p></div>";
@@ -68,7 +69,7 @@ public class LoginService implements Service {
             }
         }
 
-        if(destPage.equals(INDEX_PAGE)) {
+        if(destPage.equals(ConfigurationManager.getProperty("path.page.index"))) {
             response.sendRedirect("/comicshop");
         } else {
             RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);

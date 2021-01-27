@@ -3,6 +3,7 @@ package kz.comicshop.service;
 import kz.comicshop.data.UserDAO;
 import kz.comicshop.entity.FormValidator;
 import kz.comicshop.entity.User;
+import kz.comicshop.util.ConfigurationManager;
 import kz.comicshop.util.PasswordUtil;
 import org.apache.log4j.Logger;
 
@@ -23,7 +24,7 @@ public class RegistrationService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = SIGNUP_PAGE;
+        String destPage = ConfigurationManager.getProperty("path.page.registration");
         String action = request.getParameter(ACTION);
 
         if(action != null) {
@@ -64,15 +65,15 @@ public class RegistrationService implements Service {
                     user.setId(userId);
                     HttpSession session = request.getSession();
                     session.setAttribute(USER, user);
-                    destPage = INDEX_PAGE;
+                    destPage = ConfigurationManager.getProperty("path.page.index");
                 } else {
                     request.setAttribute(FORM, formValidation);
-                    destPage = SIGNUP_PAGE;
+                    destPage = ConfigurationManager.getProperty("path.page.registration");
                 }
             }
         }
 
-        if(destPage.equals(INDEX_PAGE)) {
+        if(destPage.equals(ConfigurationManager.getProperty("path.page.index"))) {
             response.sendRedirect("/comicshop");
         } else {
             RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);

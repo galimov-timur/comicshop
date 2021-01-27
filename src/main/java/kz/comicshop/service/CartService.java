@@ -4,6 +4,7 @@ import kz.comicshop.data.ProductDAO;
 import kz.comicshop.entity.Cart;
 import kz.comicshop.entity.OrderItem;
 import kz.comicshop.entity.Product;
+import kz.comicshop.util.ConfigurationManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -22,7 +23,7 @@ public class CartService implements Service {
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = CART_PAGE;
+        String destPage = ConfigurationManager.getProperty("path.page.cart");
         String action = request.getParameter(ACTION);
 
         if(action != null) {

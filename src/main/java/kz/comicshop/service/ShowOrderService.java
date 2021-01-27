@@ -3,6 +3,7 @@ package kz.comicshop.service;
 import kz.comicshop.data.OrderDetailsDAO;
 import kz.comicshop.entity.OrderDetails;
 import kz.comicshop.entity.User;
+import kz.comicshop.util.ConfigurationManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +19,7 @@ public class ShowOrderService implements  Service{
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ORDER_PAGE;
+        String destPage = ConfigurationManager.getProperty("path.page.order");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER);

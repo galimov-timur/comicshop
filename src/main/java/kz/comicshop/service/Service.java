@@ -33,23 +33,7 @@ public interface Service {
     public static final String CATEGORY_ID = "categoryId";
     public static final String UPDATE = "update";
     public static final String ORDER_STATUS = "orderStatus";
-
-    // PAGES
-
-    public static final String ADD_PRODUCT_PAGE = "/add_product.jsp";
-    public static final String INDEX_PAGE = "/index.jsp";
-    public static final String ORDER_PAGE = "/order.jsp";
-    public static final String MANAGE_ORDER_PAGE = "/manage_order.jsp";
-    public static final String ADMIN_PAGE = "/admin.jsp";
-    public static final String CART_PAGE = "/cart.jsp";
-    public static final String ADDRESS_PAGE = "/address.jsp";
-    public static final String LOGIN_PAGE = "/login.jsp";
-    public static final String SIGNUP_PAGE = "/registration.jsp";
-    public static final String INVOICE_PAGE = "/invoice.jsp";
-    public static final String THANKS_PAGE = "/thanks.jsp";
-    public static final String CATALOG_PAGE = "/catalog.jsp";
-    public static final String CATEGORY_PAGE = "/category.jsp";
-    public static final String PRODUCT_PAGE = "/product.jsp";
+    public static final String ERROR_CODE = "errorCode";
 
     void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException,  ParseException, SQLException;
 }
