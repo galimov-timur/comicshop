@@ -2,6 +2,9 @@ package kz.comicshop.entity;
 
 import java.io.Serializable;
 
+/**
+ * User entity implementation
+ */
 public class User implements Serializable {
 
     private long id;
@@ -18,21 +21,7 @@ public class User implements Serializable {
     private String country;
     private short role;
 
-    public User() {
-        this.id = 0;
-        this.firstName = "";
-        this.lastName = "";
-        this.email = "";
-        this.password = "";
-        this.salt = "";
-        this.phone = "";
-        this.address1 = "";
-        this.address2 = "";
-        this.city = "";
-        this.zip = "";
-        this.country = "";
-        this.role = 0;
-    }
+    public User() {}
 
     public User(long id, String firstName, String lastName, String email, String password, String salt, String phone, String address1, String address2, String city, String zip, String country, short role) {
         this.id = id;

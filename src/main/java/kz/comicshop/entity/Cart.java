@@ -1,8 +1,14 @@
 package kz.comicshop.entity;
 
+import kz.comicshop.util.CurrencyUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Shopping cart implementation. Provides methods to add and remove products from the cart. Empty cart and
+ * get total cost of products
+ */
 public class Cart implements Serializable {
     private ArrayList<OrderItem> cartProducts;
 
@@ -47,6 +53,15 @@ public class Cart implements Serializable {
             total += item.getTotal();
         }
         return total;
+    }
+
+    public String getTotalInCurrency() {
+        double total = 0;
+        for(OrderItem item: cartProducts) {
+            total += item.getTotal();
+        }
+        String totalInCurrency = CurrencyUtil.convert(total);
+        return totalInCurrency;
     }
 
     public void empty() {

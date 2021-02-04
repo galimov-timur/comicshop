@@ -1,33 +1,30 @@
 package kz.comicshop.service;
 
+import static kz.comicshop.service.constants.CommonConstants.*;
+
 import kz.comicshop.data.ProductDAO;
-import kz.comicshop.entity.Cart;
-import kz.comicshop.entity.OrderItem;
-import kz.comicshop.entity.Product;
-import kz.comicshop.util.ConfigurationManager;
+import kz.comicshop.entity.*;
 import org.apache.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * CartService creates cart object and stores it in session, allowing user to add and remove products from it
+ */
 public class CartService implements Service {
-
-    static final Logger logger = Logger.getLogger(CartService.class);
+    static final Logger LOGGER = Logger.getLogger(CartService.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ConfigurationManager.getProperty("path.page.cart");
+        String destPage = CART_PAGE;
         String action = request.getParameter(ACTION);
 
         if(action != null) {
-
             HttpSession session = request.getSession();
             Cart cart = (Cart) session.getAttribute(CART);
             String productId = request.getParameter(ID);
@@ -36,28 +33,24 @@ public class CartService implements Service {
             try {
                 productIdAsLong = Long.parseLong(productId);
             } catch(NumberFormatException e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
 
             if(action.equals(ADD)) {
-
                 if(cart == null) {
                     cart = new Cart();
                 }
-
                 Product productToAdd = ProductDAO.getProductById(productIdAsLong);
-
+                int productQuantity = 1;
                 OrderItem orderItem = new OrderItem();
                 orderItem.setProduct(productToAdd);
-                orderItem.setQuantity(1);
+                orderItem.setQuantity(productQuantity);
                 cart.addProduct(orderItem);
-
             } else if(action.equals(REMOVE)) {
                 if(cart != null) {
                     cart.removeProduct(productIdAsLong);
                 }
             }
-
             session.setAttribute(CART, cart);
         }
 

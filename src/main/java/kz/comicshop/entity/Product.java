@@ -1,28 +1,26 @@
 package kz.comicshop.entity;
 
+import kz.comicshop.util.CurrencyUtil;
+
 import java.io.Serializable;
 
+/**
+ * Product entity implementation
+ */
 public class Product implements Serializable {
 
     private long id;
-    private long category_id;
+    private long categoryId;
     private String name;
     private String description;
     private double price;
     private String imageUrl;
     private int quantity;
 
-    public Product() {
-        this.category_id = 0;
-        this.name = "";
-        this.description = "";
-        this.price = 0.00;
-        this.imageUrl = "";
-        this.quantity = 0;
-    }
+    public Product() {}
 
     public Product(long category_id, String name, String description, double price, String imageUrl, int quantity) {
-        this.category_id = category_id;
+        this.categoryId = category_id;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -30,12 +28,12 @@ public class Product implements Serializable {
         this.quantity = quantity;
     }
 
-    public long getCategory_id() {
-        return category_id;
+    public long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory_id(long category_id) {
-        this.category_id = category_id;
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -84,5 +82,10 @@ public class Product implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getPriceInCurrency() {
+        String priceInCurrency = CurrencyUtil.convert(price);
+        return priceInCurrency;
     }
 }

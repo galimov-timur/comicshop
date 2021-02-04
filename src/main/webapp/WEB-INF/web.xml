@@ -10,10 +10,6 @@
   </welcome-file-list>
 
   <context-param>
-    <param-name>imageSource</param-name>
-    <param-value>/home/timur/Desktop/EE/images/</param-value>
-  </context-param>
-  <context-param>
     <param-name>logConfigFile</param-name>
     <param-value>WEB-INF/classes/log4j.properties</param-value>
   </context-param>
@@ -62,7 +58,7 @@
   </session-config>
 
   <resource-ref>
-    <description>postgreSQL Datasource example</description>
+    <description>postgreSQL</description>
     <res-ref-name>jdbc/comicshop</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>
     <res-auth>Container</res-auth>

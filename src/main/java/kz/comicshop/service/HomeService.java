@@ -1,25 +1,27 @@
 package kz.comicshop.service;
 
-import kz.comicshop.data.CategoryDAO;
-import kz.comicshop.data.ProductDAO;
-import kz.comicshop.entity.Category;
-import kz.comicshop.entity.Product;
-import kz.comicshop.util.ConfigurationManager;
+import static kz.comicshop.service.constants.CommonConstants.*;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import kz.comicshop.data.*;
+import kz.comicshop.entity.*;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * HomeService displays products of default category (which is one), on the index page
+ */
 public class HomeService implements Service {
+    private static final String PRODUCTS = "products";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ConfigurationManager.getProperty("path.page.index");
+        String destPage = INDEX_PAGE;
         long defaultCategoryId = 1;
 
         Category category = CategoryDAO.getCategoryById(defaultCategoryId);
@@ -29,7 +31,6 @@ public class HomeService implements Service {
             request.setAttribute(PRODUCTS, products);
             request.setAttribute(NAME, category.getName());
         }
-
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
     }

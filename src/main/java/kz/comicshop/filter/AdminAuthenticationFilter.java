@@ -1,18 +1,22 @@
 package kz.comicshop.filter;
 
+import static kz.comicshop.service.constants.CommonConstants.*;
+import static kz.comicshop.service.constants.ServiceConstants.*;
+
 import kz.comicshop.entity.User;
-import kz.comicshop.service.Service;
-import kz.comicshop.util.ConfigurationManager;
+import kz.comicshop.util.*;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 
+/**
+ * AdminAuthenticationFilter checks if a user has rights to access administrator services
+ */
 public class AdminAuthenticationFilter implements Filter {
-
-    private static final String[] RESTRICTED_URLS = {"/COMICSHOP/ADMIN/PRODUCT/DELETE", "/COMICSHOP/ADMIN/CATEGORY",
-            "/COMICSHOP/ADMIN/PRODUCT/ADD", "/COMICSHOP/ADMIN/ORDER", "/COMICSHOP/ADMIN/MENU"};
+    private static final String[] RESTRICTED_URLS = {DELETE_PRODUCT_SERVICE, ADMIN_CATEGORY_SERVICE,
+            ADD_PRODUCT_SERVICE, ADMIN_ORDER_SERVICE, ADMIN_SERVICE};
+    private static final short ADMIN_RIGHTS = 1;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
@@ -22,13 +26,12 @@ public class AdminAuthenticationFilter implements Filter {
             throws IOException, ServletException {
 
         String destPage = ConfigurationManager.getProperty("path.page.login");
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession(false);
-        boolean hasRights = false;
 
+        boolean hasRights = false;
         boolean isPermissionNeeded = false;
-        String requestUrl = httpRequest.getRequestURI().toString();
+        String requestUrl = httpRequest.getRequestURI();
         for(String url: RESTRICTED_URLS) {
             if(requestUrl.equalsIgnoreCase(url)) {
                 isPermissionNeeded = true;
@@ -39,26 +42,21 @@ public class AdminAuthenticationFilter implements Filter {
             filterChain.doFilter(request,response);
         } else {
             if (session != null) {
-                String message = "";
-                User user = (User) session.getAttribute(Service.USER);
-
+                String message = EMPTY_STRING;
+                User user = (User) session.getAttribute(USER);
                 if(user != null) {
-                    short userRole = user.getRole(); // 0 user, 1 - admin
-
-                    if(userRole == 1) {
+                    short userRole = user.getRole();
+                    if(userRole == ADMIN_RIGHTS) {
                         hasRights = true;
                         filterChain.doFilter(request,response);
                     } else {
-                        message = "<div class='message --warning'><p>У вас недостаточно прав</p></div>";
+                        message = MessageManager.getWarningMessage("message.filter.no.rights");
                     }
-
                 } else {
-                    message = "<div class='message --warning'><p>Войдите на сайт используя свой логин и пароль</p></div>";
+                    message = MessageManager.getWarningMessage("message.filter.login.needed");
                 }
-
-                request.setAttribute(Service.MESSAGE, message);
+                request.setAttribute(MESSAGE, message);
             }
-
             if (session == null || !hasRights) {
                 RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
                 dispatcher.forward(request, response);

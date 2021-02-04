@@ -1,74 +1,55 @@
 package kz.comicshop.service;
 
-import kz.comicshop.data.OrderDetailsDAO;
-import kz.comicshop.data.OrderItemDAO;
-import kz.comicshop.entity.OrderDetails;
-import kz.comicshop.entity.OrderItem;
-import kz.comicshop.util.ConfigurationManager;
+import static kz.comicshop.service.constants.CommonConstants.*;
+
+import kz.comicshop.data.*;
+import kz.comicshop.entity.*;
+import kz.comicshop.util.MessageManager;
 import org.apache.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * AdminOrderService implements methods to manage user orders
+ */
 public class AdminOrderService implements Service {
-
-    static final Logger logger = Logger.getLogger(AdminOrderService.class);
+    private static final Logger LOGGER = Logger.getLogger(AdminOrderService.class);
+    private static final MessageManager MESSAGE_MANAGER = MessageManager.getInstance();
+    private static final String ORDER_DETAILS = "orderDetails";
+    private static final String ORDER_STATUS = "orderStatus";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ConfigurationManager.getProperty("path.page.order");
+        String destPage = ORDER_PAGE;
         String orderDetailsIdString = request.getParameter(ID);
         String action = request.getParameter(ACTION);
-        String message = "";
+        String message = EMPTY_STRING;
 
         if(action != null) {
             long orderDetailsIdAsLong = 0;
             try {
                 orderDetailsIdAsLong = Long.parseLong(orderDetailsIdString);
             } catch(NumberFormatException e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
-
             if(action.equals(EDIT)) {
                 OrderDetails orderDetails = OrderDetailsDAO.getOrderById(orderDetailsIdAsLong);
                 ArrayList<OrderItem> orderItems = OrderItemDAO.getOrderItemsByOrderId(orderDetailsIdAsLong);
-
                 if(orderDetails != null) {
                     orderDetails.setOrderItems(orderItems);
                 }
-
                 request.setAttribute(ORDER_DETAILS, orderDetails);
-                destPage = ConfigurationManager.getProperty("path.page.manage_order");
+                destPage = MANAGE_ORDER_PAGE;
             } else if (action.equals(UPDATE)) {
-                String newStatus = request.getParameter(ORDER_STATUS);
-
-                short newStatusAsShort = 0;
-                try {
-                    newStatusAsShort = Short.parseShort(newStatus);
-                } catch(NumberFormatException e) {
-                    logger.error(e.getMessage());
-                }
-
-                int result = OrderDetailsDAO.updateOrderStatus(orderDetailsIdAsLong, newStatusAsShort);
-                if(result > 0) {
-                    message = "<div class='message --success'><p>Статус заказа успешно обновлен</p></div>";
-                } else {
-                    message = "<div class='message --warning'><p>Не удалось обновить статус заказа</p></div>";
-                }
+                message = updateOrderStatus(request, orderDetailsIdAsLong);
             } else if (action.equals(REMOVE)) {
-                int result = OrderDetailsDAO.deleteById(orderDetailsIdAsLong);
-                if(result > 0) {
-                    message = "<div class='message --success'><p>Заказ успешно удален</p></div>";
-                } else {
-                    message = "<div class='message --warning'><p>Не удалось удалить заказ</p></div>";
-                }
+                message = removeOrder(request, orderDetailsIdAsLong);
             }
         }
 
@@ -78,5 +59,46 @@ public class AdminOrderService implements Service {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
+    }
+
+    /**
+     * Updates order status in database by it's id, 0 - new, 1 - processing, 2 - delivered
+     * @param request - HttpServletRequest
+     * @param orderDetailsId - long orderId
+     * @return String, result message
+     */
+    private String updateOrderStatus(HttpServletRequest request, long orderDetailsId) {
+        String message;
+        short newStatusAsShort = 0;
+        String newStatus = request.getParameter(ORDER_STATUS);
+        try {
+            newStatusAsShort = Short.parseShort(newStatus);
+        } catch(NumberFormatException e) {
+            LOGGER.error(e.getMessage());
+        }
+        int result = OrderDetailsDAO.updateOrderStatus(orderDetailsId, newStatusAsShort);
+        if(result > 0) {
+            message = MESSAGE_MANAGER.getSuccessMessage("message.order.update.success");
+        } else {
+            message = MESSAGE_MANAGER.getWarningMessage("message.order.update.failure");
+        }
+        return message;
+    }
+
+    /**
+     * Removes order from database by it's id
+     * @param request - HttpServletRequest
+     * @param orderDetailsId - long orderId
+     * @return String, result message
+     */
+    private String removeOrder(HttpServletRequest request, long orderDetailsId) {
+        String message;
+        int result = OrderDetailsDAO.deleteById(orderDetailsId);
+        if(result > 0) {
+            message = MESSAGE_MANAGER.getSuccessMessage("message.order.remove.success");
+        } else {
+            message = MESSAGE_MANAGER.getWarningMessage("message.order.remove.failure");
+        }
+        return message;
     }
 }

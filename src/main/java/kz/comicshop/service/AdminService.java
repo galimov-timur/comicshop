@@ -1,19 +1,20 @@
 package kz.comicshop.service;
 
-import kz.comicshop.util.ConfigurationManager;
+import static kz.comicshop.service.constants.CommonConstants.*;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Sends user with appropriate rights to administration page
+ */
 public class AdminService implements Service {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        String destPage = ConfigurationManager.getProperty("path.page.admin");
+        String destPage = ADMIN_PAGE;
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);

@@ -1,77 +1,123 @@
 package kz.comicshop.service;
 
+import static kz.comicshop.service.constants.ProductConstants.*;
+import static kz.comicshop.service.constants.CommonConstants.*;
+
 import kz.comicshop.data.ProductDAO;
 import kz.comicshop.entity.Product;
-import kz.comicshop.util.ConfigurationManager;
+import kz.comicshop.util.*;
+import kz.comicshop.validation.ProductValidator;
 import org.apache.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.nio.file.*;
 import java.sql.SQLException;
 
+/**
+ * AddProductService - provides service to add new product in database. All input information
+ * is validated by ProductValidator class in util package.
+ */
 public class AddProductService implements Service {
-
-    static final Logger logger = Logger.getLogger(AddProductService.class);
+    static final Logger LOGGER = Logger.getLogger(AddProductService.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ConfigurationManager.getProperty("path.page.add_product");
+        String destPage = ADD_PRODUCT_PAGE;
         String action = request.getParameter(ACTION);
+        String message;
 
         if(action != null) {
+
             if(action.equals(ADD)) {
+                ProductValidator productValidator = new ProductValidator();
+                String productImageUrl = EMPTY_STRING;
+                Part filePart = request.getPart(PRODUCT_IMAGE);
+                Product product;
 
-                String productCategoryId = request.getParameter("productCategory");
-                String name = request.getParameter("productName");
-                String description = request.getParameter("productDescription");
-                String productQuantity = request.getParameter("productQuantity");
-                String productPrice = request.getParameter("productPrice");
-
-                double price = 0.0;
-                int quantity = 0;
-                long categoryId = 0;
-
-                try {
-                    price = Double.parseDouble(productPrice);
-                    quantity = Integer.parseInt(productQuantity);
-                    categoryId = Long.parseLong(productCategoryId);
-                } catch(NumberFormatException e) {
-                    logger.error(e.getMessage());
+                if(filePart.getSize() != 0) {
+                    productImageUrl = saveImage(filePart, request);
                 }
+                productValidator.setProductImage(productImageUrl);
+                product = validateProductParameters(request, productValidator);
 
-                Part filePart = request.getPart("productImage");
-                InputStream fileInputStream = filePart.getInputStream();
+                if(product != null) {
+                    product.setImageUrl(productImageUrl);
+                    int rowsInserted = ProductDAO.insertProduct(product);
+                    MessageManager messageManager = MessageManager.getInstance();
 
-                String imageDest = request.getServletContext().getInitParameter("imageSource");
-                File fileToSave = new File(imageDest + filePart.getSubmittedFileName());
-                Files.copy(fileInputStream, fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                String productImageUrl = "/catalog/" + filePart.getSubmittedFileName();
-
-                Product product = new Product(categoryId, name, description, price, productImageUrl, quantity);
-                int rowsInserted = ProductDAO.insertProduct(product);
-
-                String message;
-                if(rowsInserted != 0) {
-                    message = "<div class='message --success'><p>Ваш товар успешно добавлен</p></div>";
+                    if(rowsInserted > 0) {
+                        message = messageManager.getSuccessMessage("message.product.add.success");
+                    } else {
+                        message = messageManager.getWarningMessage("message.product.add.failure");
+                    }
+                    request.setAttribute(MESSAGE, message);
                 } else {
-                    message = "<div class='message --warning'><p>Не удалось добавить товар</p></div>";
+                    request.setAttribute(FORM, productValidator);
                 }
-                request.setAttribute(MESSAGE, message);
             }
         }
-
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
+    }
+
+    /**
+     * Saves product image to the external image folder, which is mapped to a web application
+     * @param filePart - Part object from a request
+     * @param request - HttpServletRequest
+     * @return - path to the downloaded image in a web application
+     */
+    private String saveImage(Part filePart, HttpServletRequest request) {
+        try {
+            InputStream fileInputStream = filePart.getInputStream();
+            String pathToImages = ConfigurationManager.getProperty("path.image.source");
+            File destFile = new File(pathToImages + filePart.getSubmittedFileName());
+            Files.copy(fileInputStream, destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch(IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+        String pathToImagesInApp = ConfigurationManager.getProperty("path.image.web");
+        String productImageUrl = pathToImagesInApp + filePart.getSubmittedFileName();
+        return productImageUrl;
+    }
+
+    private Product validateProductParameters(HttpServletRequest request, ProductValidator productValidator) {
+        String productCategoryId = request.getParameter(PRODUCT_CATEGORY);
+        String name = request.getParameter(PRODUCT_NAME);
+        String description = request.getParameter(PRODUCT_DESCRIPTION);
+        String productQuantity = request.getParameter(PRODUCT_QUANTITY);
+        String productPrice = request.getParameter(PRODUCT_PRICE);
+
+        productValidator.setProductCategory(productCategoryId);
+        productValidator.setProductName(name);
+        productValidator.setProductDescription(description);
+        productValidator.setProductQuantity(productQuantity);
+        productValidator.setProductPrice(productPrice);
+
+        if(productValidator.process()){
+            long categoryId = 0;
+            int quantity = 0;
+            double price = 0;
+
+            try {
+                categoryId = Long.parseLong(productCategoryId);
+                quantity = Integer.parseInt(productQuantity);
+                price = Double.parseDouble(productPrice);
+            } catch(NumberFormatException e) {
+                LOGGER.error(e.getMessage());
+            }
+
+            Product product = new Product();
+            product.setCategoryId(categoryId);
+            product.setName(name);
+            product.setDescription(description);
+            product.setQuantity(quantity);
+            product.setPrice(price);
+            return product;
+        }
+        return null;
     }
 }

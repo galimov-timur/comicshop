@@ -1,26 +1,28 @@
 package kz.comicshop.service;
 
+import static kz.comicshop.service.constants.CommonConstants.*;
+import static kz.comicshop.service.constants.ProductConstants.*;
+
 import kz.comicshop.data.ProductDAO;
 import kz.comicshop.entity.Product;
-import kz.comicshop.util.ConfigurationManager;
 import org.apache.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * ShowProductService - gets product from the database, and displays it on the product page
+ */
 public class ShowProductService implements Service {
-
-    static final Logger logger = Logger.getLogger(ShowProductService.class);
+    static final Logger LOGGER = Logger.getLogger(ShowProductService.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ConfigurationManager.getProperty("path.page.index");
+        String destPage = INDEX_PAGE;
         String productId = request.getParameter(ID);
 
         if(productId != null) {
@@ -28,11 +30,12 @@ public class ShowProductService implements Service {
             try {
                 productIdAsLong = Long.parseLong(productId);
             } catch(NumberFormatException e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
+
             Product product = ProductDAO.getProductById(productIdAsLong);
             request.setAttribute(PRODUCT, product);
-            destPage = ConfigurationManager.getProperty("path.page.product");
+            destPage = PRODUCT_PAGE;
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);

@@ -51,12 +51,9 @@ database database.sql.
     path - путь по которому данный ресурс будет доступен в приложении
 
 Для того, чтобы при добавлении товара через панель администратора изображения копировались в 
-нужную папку, путь к ней, также нужно указать в файле web.xml.
+нужную папку, путь к ней, также нужно указать в файле resources/config.properties
 
-`<context-param>
-    <param-name>imageSource</param-name>
-    <param-value>/path/to/images/</param-value>
-</context-param>`
+`path.image.source=/path/to/images/`
 
 Для отображения изображений скопируйте файлы из папки database/images в настроенную папку.
 

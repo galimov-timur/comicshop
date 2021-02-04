@@ -7,9 +7,13 @@ import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+/**
+ * Connection pool implementation allows to reuse a number of existing connections,
+ * thus boosting application performance. Provides methods to get connection pool,
+ * get and release connection.
+ */
 public class ConnectionPool {
-
-    static final Logger logger = Logger.getLogger(ConnectionPool.class);
+    static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
 
     private static ConnectionPool pool = null;
     private static DataSource dataSource = null;
@@ -19,7 +23,7 @@ public class ConnectionPool {
             InitialContext ic = new InitialContext();
             dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/comicshop");
         } catch(NamingException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -34,7 +38,7 @@ public class ConnectionPool {
         try {
             return dataSource.getConnection();
         } catch(SQLException e) {
-            logger.error(e.getMessage());;
+            LOGGER.error(e.getMessage());;
             return null;
         }
     }
@@ -43,7 +47,7 @@ public class ConnectionPool {
         try {
             c.close();
         } catch(SQLException e) {
-            logger.error(e.getMessage());;
+            LOGGER.error(e.getMessage());;
         }
     }
 }

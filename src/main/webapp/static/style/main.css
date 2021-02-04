@@ -72,6 +72,19 @@ header {
     color: #ffffff;
 }
 
+.lang {
+    padding-left: 5px;
+    padding-top: 10px;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+.lang.first {
+    padding-left: 30px;
+}
+.lang:hover, .lang:active, .lang:focus {
+    color: #999999;
+}
 /*LOGO*/
 
 .logo {
@@ -517,6 +530,7 @@ footer a {
 .error_code {
     color: red;
 }
+
 /***************************** UTILITY ****************************/
 .text-center {
     text-align: center;

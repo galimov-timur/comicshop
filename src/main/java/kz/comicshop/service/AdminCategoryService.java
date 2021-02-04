@@ -1,83 +1,98 @@
 package kz.comicshop.service;
 
+import static kz.comicshop.service.constants.CommonConstants.*;
+
 import kz.comicshop.data.CategoryDAO;
 import kz.comicshop.entity.Category;
-import kz.comicshop.util.ConfigurationManager;
+import kz.comicshop.util.MessageManager;
 import org.apache.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * AdminCategoryService - provides services for adding and removing categories in web application
+ */
 public class AdminCategoryService implements Service {
-
-    static final Logger logger = Logger.getLogger(AdminCategoryService.class);
+    private static final Logger LOGGER = Logger.getLogger(AdminCategoryService.class);
+    private static final MessageManager MESSAGE_MANAGER = MessageManager.getInstance();
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ConfigurationManager.getProperty("path.page.category");
+        String destPage = MANAGE_CATEGORIES_PAGE;
         String action = request.getParameter(ACTION);
-
+        String message = EMPTY_STRING;
 
         if(action != null) {
-            String message = "";
-
             if(action.equals(ADD)) {
-                String categoryName = request.getParameter(NAME);
-                Category newCategory = new Category(categoryName);
-
-                int result = CategoryDAO.insertCategory(newCategory);
-
-                if(result > 0) {
-                    message = "<div class='message --success'><p>Категория успешно добавлена</p></div>";
-                    ServletContext application = request.getServletContext();
-                    application.removeAttribute(CATEGORIES);
-                    ArrayList<Category> categories = CategoryDAO.getCategories();
-                    application.setAttribute(CATEGORIES, categories);
-                } else {
-                    message = "<div class='message --warning'><p>Не удалось добавить категорию</p></div>";
-                }
-
+                message = addCategory(request);
             } else if(action.equals(REMOVE)) {
                 String categoryId = request.getParameter(ID);
-
                 long categoryIdAsLong = 0;
-
                 try {
                     categoryIdAsLong = Long.parseLong(categoryId);
                 } catch (NumberFormatException e) {
-                    logger.error(e.getMessage());
+                    LOGGER.error(e.getMessage());
                 }
-
-                int result = CategoryDAO.delete(categoryIdAsLong);
-
-                if(result > 0) {
-                    message = "<div class='message --success'><p>Категория успешно удалена</p></div>";
-                    ServletContext application = request.getServletContext();
-                    ArrayList<Category> categories = (ArrayList<Category>) application.getAttribute(CATEGORIES);
-
-                    for(int i = 0; i < categories.size(); i++) {
-                        if(categories.get(i).getId() == categoryIdAsLong) {
-                            categories.remove(i);
-                        }
-                    }
-
-                    application.setAttribute(CATEGORIES, categories);
-                } else {
-                    message = "<div class='message --warning'><p>Не удалось удалить категорию</p></div>";
-                }
+                message = removeCategory(request, categoryIdAsLong);
             }
             request.setAttribute(MESSAGE, message);
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
+    }
+
+    /**
+     * Creates new category and saves it in database, then updates categories attribute in application context
+     * @param request - HttpServletRequest
+     * @return - String, result message
+     */
+    private String addCategory(HttpServletRequest request) {
+        String message;
+        String categoryName = request.getParameter(NAME);
+        Category newCategory = new Category(categoryName);
+        int result = CategoryDAO.insertCategory(newCategory);
+        if(result > 0) {
+            message = MESSAGE_MANAGER.getSuccessMessage("message.category.add.success");
+            ServletContext application = request.getServletContext();
+            application.removeAttribute(CATEGORIES);
+            ArrayList<Category> categories = CategoryDAO.getCategories();
+            application.setAttribute(CATEGORIES, categories);
+        } else {
+            message = MESSAGE_MANAGER.getWarningMessage("message.category.add.failure");
+        }
+        return message;
+    }
+
+    /**
+     * Removes category from database by category id, then updates categories attribute in application context
+     * @param request - HttpServletRequest
+     * @param categoryId - long
+     * @return - String, result message
+     */
+    private String removeCategory(HttpServletRequest request, long categoryId) {
+        String message;
+        int result = CategoryDAO.delete(categoryId);
+        if(result > 0) {
+            message = MESSAGE_MANAGER.getSuccessMessage("message.category.remove.success");
+            ServletContext application = request.getServletContext();
+            ArrayList<Category> categories = (ArrayList<Category>) application.getAttribute(CATEGORIES);
+            int categoryIndex;
+            for(categoryIndex = 0; categoryIndex < categories.size(); categoryIndex++) {
+                if(categories.get(categoryIndex).getId() == categoryId) {
+                    categories.remove(categoryIndex);
+                }
+            }
+            application.setAttribute(CATEGORIES, categories);
+        } else {
+            message = MESSAGE_MANAGER.getWarningMessage("message.category.remove.failure");
+        }
+        return message;
     }
 }

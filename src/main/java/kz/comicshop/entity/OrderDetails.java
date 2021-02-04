@@ -1,13 +1,21 @@
 package kz.comicshop.entity;
 
+import kz.comicshop.util.CurrencyUtil;
+import kz.comicshop.util.MessageManager;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Order details entity represents order information
+ */
 public class OrderDetails {
+
     private long orderId;
     private User user;
     private ArrayList<OrderItem> orderItems;
@@ -15,13 +23,7 @@ public class OrderDetails {
     private double totalAmount;
     private short orderStatus;
 
-    public OrderDetails() {
-        this.user = null;
-        this.orderItems = null;
-        this.orderDate = null;
-        this.totalAmount = 0.00;
-        this.orderStatus = 0;
-    }
+    public OrderDetails() {}
 
     public OrderDetails(User user, ArrayList<OrderItem> orderItems, String orderDate, double totalAmount, short orderStatus) {
         this.user = user;
@@ -80,13 +82,14 @@ public class OrderDetails {
     }
 
     public String displayStatus() {
+        MessageManager messageManager = MessageManager.getInstance();
         switch (orderStatus) {
             case 0:
-                return "новый заказ";
+                return messageManager.getMessage("order.status.new");
             case 1:
-                return "В обработке";
+                return messageManager.getMessage("order.status.processing");
             case 2:
-                return "Выполнен";
+                return messageManager.getMessage("order.status.delivered");
             default:
                 return "";
         }
@@ -104,11 +107,8 @@ public class OrderDetails {
         return date;
     }
 
-    public double getTotal() {
-        double total = 0;
-        for(OrderItem item: orderItems) {
-            total += item.getQuantity() * item.getProduct().getPrice();
-        }
-        return total;
+    public String getTotal() {
+        String totalInCurrency = CurrencyUtil.convert(totalAmount);
+        return totalInCurrency;
     }
 }

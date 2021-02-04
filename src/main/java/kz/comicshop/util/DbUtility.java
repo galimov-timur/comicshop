@@ -8,8 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DbUtility {
-
-    static final Logger logger = Logger.getLogger(DbUtility.class);
+    static final Logger LOGGER = Logger.getLogger(DbUtility.class);
 
     public static void closeStatement(Statement s) {
         try {
@@ -17,7 +16,7 @@ public class DbUtility {
                 s.close();
             }
         } catch(SQLException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -27,7 +26,7 @@ public class DbUtility {
                 ps.close();
             }
         } catch(SQLException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -37,7 +36,7 @@ public class DbUtility {
                 rs.close();
             }
         } catch(SQLException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 }

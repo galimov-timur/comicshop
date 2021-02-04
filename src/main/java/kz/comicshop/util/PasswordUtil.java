@@ -8,7 +8,7 @@ import java.util.Base64;
 
 public class PasswordUtil {
 
-    public static String saltPassword(String password) {
+    public static String saltPassword() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);

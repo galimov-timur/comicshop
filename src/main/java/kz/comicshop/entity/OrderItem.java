@@ -1,16 +1,19 @@
 package kz.comicshop.entity;
 
+import kz.comicshop.util.CurrencyUtil;
+
 import java.io.Serializable;
 
+/**
+ * OrderItem entity represents a Product which is already in a shopping cart, contains
+ * products information, and how many of this product were put in a shopping cart
+ */
 public class OrderItem implements Serializable {
 
     private Product product;
     private int quantity;
 
-    public OrderItem() {
-        this.product = null;
-        this.quantity = 0;
-    }
+    public OrderItem() {}
 
     public OrderItem(Product product, int quantity) {
         this.product = product;
@@ -35,5 +38,11 @@ public class OrderItem implements Serializable {
 
     public double getTotal() {
         return product.getPrice() * quantity;
+    }
+
+    public String getTotalInCurrency() {
+        double total = product.getPrice() * quantity;
+        String totalInCurrency = CurrencyUtil.convert(total);
+        return totalInCurrency;
     }
 }

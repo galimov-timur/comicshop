@@ -1,95 +1,92 @@
 package kz.comicshop.service;
 
-import kz.comicshop.data.OrderDetailsDAO;
-import kz.comicshop.data.OrderItemDAO;
-import kz.comicshop.data.UserDAO;
-import kz.comicshop.entity.Cart;
-import kz.comicshop.entity.OrderDetails;
-import kz.comicshop.entity.OrderItem;
-import kz.comicshop.entity.User;
-import kz.comicshop.util.ConfigurationManager;
-import org.apache.log4j.Logger;
+import static kz.comicshop.service.constants.CommonConstants.*;
+import static kz.comicshop.service.constants.AddressConstants.*;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import kz.comicshop.data.*;
+import kz.comicshop.entity.*;
+import kz.comicshop.util.MessageManager;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
+/**
+ * CheckoutService implements a range of methods to authenticate user, update delivery address,
+ * store order information in database
+ */
 public class CheckoutService implements Service {
+    private static final int EMPTY_CART = 0;
+    private static final long ZERO_ID = 0;
+    private static final short ORDER_STATUS_NEW = 0;
+    private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String destPage = ConfigurationManager.getProperty("path.page.address");
+        String destPage = ADDRESS_PAGE;
         String action = request.getParameter(ACTION);
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(USER);
         Cart cart = (Cart)session.getAttribute(CART);
 
-        if(cart != null && cart.getSize() > 0) {
+        if(cart != null && cart.getSize() > EMPTY_CART) {
             if(user == null) {
-                String nextPage = ConfigurationManager.getProperty("path.page.address");
-                String message = "<div class='message --warning'><p>Для продолжения требуется авторизация!</p></div>";
+                String nextPage = ADDRESS_PAGE;
+                MessageManager messageManager = MessageManager.getInstance();
+                String message = messageManager.getWarningMessage("message.checkout.login");
                 session.setAttribute(NEXT_PAGE, nextPage);
                 request.setAttribute(MESSAGE, message);
-                destPage = ConfigurationManager.getProperty("path.page.login");
+                destPage = LOGIN_PAGE;
             }
 
             if(action != null && action.equals(UPDATE)) {
-                String address1 = request.getParameter("address1");
-                String address2 = request.getParameter("address2");
-                String city = request.getParameter("city");
-                String zip = request.getParameter("zip");
-                String country = request.getParameter("country");
-                user.setAddress1(address1);
-                user.setAddress2(address2);
-                user.setCity(city);
-                user.setZip(zip);
-                user.setCountry(country);
-                UserDAO.updateAddress(user);
-                destPage = ConfigurationManager.getProperty("path.page.invoice");
+                updateUserAddress(request, user);
+                destPage = INVOICE_PAGE;
             }
 
             if(action != null && action.equals(ADD)) {
                 ArrayList<OrderItem> orderItems = cart.getCartProducts();
-
-                // total sum of products
                 double totalAmount = cart.getTotal();
-
-                // Date and time of order
                 Date date = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") ;
+                SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN) ;
                 String currentDateTime = format.format(date);
-
-                // Create new OrderDetails object to store data in database
-                OrderDetails orderDetails = new OrderDetails(user, orderItems, currentDateTime, totalAmount, (short) 0);
-
-                // returns id of this order in database
+                OrderDetails orderDetails = new OrderDetails(user, orderItems, currentDateTime, totalAmount, ORDER_STATUS_NEW);
                 long orderId = OrderDetailsDAO.insertOrder(orderDetails);
 
-                // store in database products related to this order
-                if(orderId != 0) {
+                if(orderId != ZERO_ID) {
                     OrderItemDAO.insertOrderItems(orderDetails, orderId);
                     cart.empty();
                 }
 
                 request.setAttribute(ORDER_ID, orderId);
                 session.setAttribute(CART, cart);
-                destPage = ConfigurationManager.getProperty("path.page.thanks");
+                destPage = THANK_YOU_PAGE;
             }
         } else {
-            destPage = ConfigurationManager.getProperty("path.page.cart");
+            destPage = CART_PAGE;
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
         dispatcher.forward(request, response);
+    }
+
+    private void updateUserAddress(HttpServletRequest request, User user) {
+        String address1 = request.getParameter(ADDRESS1);
+        String address2 = request.getParameter(ADDRESS2);
+        String city = request.getParameter(CITY);
+        String zip = request.getParameter(ZIP);
+        String country = request.getParameter(COUNTRY);
+        user.setAddress1(address1);
+        user.setAddress2(address2);
+        user.setCity(city);
+        user.setZip(zip);
+        user.setCountry(country);
+        UserDAO.updateAddress(user);
     }
 }
